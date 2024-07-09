@@ -64,4 +64,50 @@ public class StudentDAO extends DAO {
 		return list;
 	}
 	
+	// 업데이트 기능
+	public boolean updateStudent(StudentVO studentVO) {
+		String sql = "UPDATE table_student SET "
+                + "student_name = NVL(?, student_name), "
+                + "student_phone = NVL(?, student_phone), "
+                + "address = NVL(?, address), "
+                + "birth_date = NVL(?, birth_date) "
+                + "WHERE student_number = ?";
+		
+		connection = getConnection();
+		try {
+			psmt = connection.prepareStatement(sql);
+			psmt.setString(1, studentVO.getStudentName());
+			psmt.setString(2, studentVO.getStudentPhone());
+			psmt.setString(3, studentVO.getAddress());
+			psmt.setString(4, studentVO.getBirthDate());
+			psmt.setString(5, studentVO.getStudentNumber());
+			
+			int r = psmt.executeUpdate();
+			if(r == 1) {
+				return true; // 정상 처리
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return false; // 비정상 처리
+	}
+	
+	// 제거 기능
+	public boolean deleteStudent(StudentVO studentVO) {
+		String sql = "DELETE FROM table_student ";
+		sql += "WHERE student_number = ?";
+		connection = getConnection();
+		try {
+			psmt = connection.prepareStatement(sql);
+			psmt.setString(1, studentVO.getStudentNumber());
+			
+			int r = psmt.executeUpdate();
+			if(r == 1) {
+				return true; // 정상 처리
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return false; // 비정상 처리
+	}
 }
